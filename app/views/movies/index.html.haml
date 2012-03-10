@@ -7,11 +7,7 @@
       %th{:class=>('hilite' if params[:orderBy] == 'title')}
         = link_to 'Movie Title', movies_path(:orderBy => 'title')
       %th Rating
-      -if params[:orderBy]=='release_date'
-        %th.hilite
-          = link_to 'Release Date', movies_path(:orderBy => 'release_date')
-      -else
-        %th
+      %th{:class=>('hilite' if params[:orderBy] == 'release_date')}
           = link_to 'Release Date', movies_path(:orderBy => 'release_date')
       %th More Info
   %tbody
