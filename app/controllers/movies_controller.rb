@@ -12,8 +12,11 @@ class MoviesController < ApplicationController
 #Movie.select("DISTINCT(RATING)").each {|s| @all_ratings<<s.rating} 
     Movie.find(:all, :select => 'distinct rating').each {|s| @all_ratings << s.rating} 
     @movies = Movie.find(:all,
+        :order => ((params[:orderBy]+' ASC') if params[:orderBy] != nil),
         :conditions => ( ["rating IN (?)", @checked.keys] if params[:ratings]!=nil),
-        :order => ((params[:orderBy]+' ASC') if params[:orderBy] != nil))
+        )
+#    session[:ratings]=params[:ratings]
+#    session[:orderBy]=params[:orderBy]
   end
 
   def new
