@@ -7,6 +7,10 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if (params[:ratings] == nil and session[:ratings]!=nil) or
+      (params[:orderBy] == nil and session[:orderBy]!=nil)
+      redirect_to movies_path(:orderBy => session[:orderBy], :ratings=>session[:ratings])
+    end
     @checked = params[:ratings]? params[:ratings] : {}
     @all_ratings = []
 #Movie.select("DISTINCT(RATING)").each {|s| @all_ratings<<s.rating} 
@@ -15,8 +19,8 @@ class MoviesController < ApplicationController
         :order => ((params[:orderBy]+' ASC') if params[:orderBy] != nil),
         :conditions => ( ["rating IN (?)", @checked.keys] if params[:ratings]!=nil),
         )
-#    session[:ratings]=params[:ratings]
-#    session[:orderBy]=params[:orderBy]
+    session[:ratings]=params[:ratings]
+    session[:orderBy]=params[:orderBy]
   end
 
   def new
