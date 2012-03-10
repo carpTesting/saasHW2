@@ -7,11 +7,13 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:orderBy] == nil
-      @movies = Movie.all
-    else
-      @movies = Movie.all(:order => params[:orderBy]+' ASC')
-    end
+    @checked = params[:ratings]? params[:ratings] : {}
+    @all_ratings = []
+#Movie.select("DISTINCT(RATING)").each {|s| @all_ratings<<s.rating} 
+    Movie.find(:all, :select => 'distinct rating').each {|s| @all_ratings << s.rating} 
+    @movies = Movie.find(:all,
+        :conditions => ( ["rating IN (?)", @checked.keys] if params[:ratings]!=nil),
+        :order => ((params[:orderBy]+' ASC') if params[:orderBy] != nil))
   end
 
   def new
